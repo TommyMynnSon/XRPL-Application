@@ -3,8 +3,12 @@ const xrpl = require('xrpl');
 
 // [ Variables ]
 
-// Public sever (more in https://xrpl.org/get-started-using-javascript.html)
-const PUBLIC_SERVER = 'wss://xrplcluster.com/';
+// Public server I am using (more in https://xrpl.org/public-servers.html):
+// - Operator: Ripple
+// - Network: Testnet
+// - WebSocketURL: wss://s.altnet.rippletest.net/
+// - Notes: Testnet public server
+const PUBLIC_SERVER = 'wss://s.altnet.rippletest.net/';
 
 // Wrap code in an async function so we can use await
 const main = async () => {
@@ -20,6 +24,5 @@ const main = async () => {
     // Disconnect from network client when done.
     client.disconnect();
 }
-
 
 main();
