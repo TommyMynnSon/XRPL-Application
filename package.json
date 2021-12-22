@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/TommyMynnSon/XRPL-Application/issues"
   },
-  "homepage": "https://github.com/TommyMynnSon/XRPL-Application#readme"
+  "homepage": "https://github.com/TommyMynnSon/XRPL-Application#readme",
+  "dependencies": {
+    "xrpl": "^2.1.0"
+  }
 }
