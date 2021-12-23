@@ -16,7 +16,7 @@ const PUBLIC_SERVER = 'wss://s.altnet.rippletest.net/';
 // Function that showcase various ways of generating/accessing wallets.
 const generateWallet = async (client) => {
     // ------------ A) Create a wallet and fund it with the Testnet faucet ------------
-    
+
     // const fund_result = await client.fundWallet();
     // const test_wallet = fund_result.wallet;
 
@@ -63,14 +63,22 @@ const generateWallet = async (client) => {
 
     // ------------ C) Instantiate a wallet from a seed encoded in base58 ---------------
 
+    // const test_wallet = xrpl.Wallet.fromSeed(process.env.W1_seed);
+
+    // // Expected output of test_wallet (check .env file for W1 secrets)
+    // // Wallet {
+    // //     publicKey: '',
+    // //     privateKey: '',
+    // //     classicAddress: '',
+    // //     seed: ''
+    // // }
+    // console.log(test_wallet);
+
     // ------------ C) Instantiate a wallet from a seed encoded in base58 ---------------
 };
 
-
 // Wrap code in an async function so we can use await
 const main = async () => {
-    console.log(`${process.env.GREETING}`);
-
     // Define the network client
     const client = new xrpl.Client(PUBLIC_SERVER);
 
