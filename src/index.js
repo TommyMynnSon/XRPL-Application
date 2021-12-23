@@ -180,6 +180,8 @@ const sendXRP = async (client, sender, receiver) => {
     // console.log("Balance changes:", JSON.stringify(xrpl.getBalanceChanges(tx.result.meta), null, 2));
 };
 
+// Used to demonstrate wallet generation, queries to the XRP Ledger API, handlers for events on the XRP Ledger API, and
+// sending of XRP
 const main = async () => {
     // Define the network client
     const client = new xrpl.Client(PUBLIC_SERVER);
