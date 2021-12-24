@@ -1,8 +1,8 @@
 // [ Dependencies ]
+const xrpl = require('xrpl');
+
 const dotenv = require('dotenv');
 dotenv.config({ path: '../.env' });
-
-const xrpl = require('xrpl');
 
 // [ Variables ]
 // Public server I am using (more in https://xrpl.org/public-servers.html):
@@ -283,14 +283,6 @@ const cancelOffer = async (client, canceller) => {
     // // }
     // console.log('Prepared transaction instructions:', prepared);
 
-    // // Expected output of xrpl.dropsToXrp(prepared.TakerGets)
-    // // 6
-    // console.log('TakerGets:', Number(xrpl.dropsToXrp(prepared.TakerGets)), 'XRP');
-
-    // // Expected output Number(prepared.TakerPays.value), prepared.TakerPays.currency
-    // // 2 GKO
-    // console.log('TakerPays', Number(prepared.TakerPays.value), prepared.TakerPays.currency);
-
     // // Expected output of max_ledger
     // // 23822697
     // console.log('Transaction expires after ledger:', max_ledger);
@@ -442,7 +434,7 @@ const main = async () => {
     // Create a trust line linking two accounts (TrustSet transaction)
     await createTrustLine(client, wallet);
 
-    // Modify the properties of an account in the XRP Ledger
+    // Modify the properties of an account in the XRP Ledger (AccountSet)
     await modifyAccount(client, wallet);
 
     // Disconnect from network client when done.
