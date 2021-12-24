@@ -366,6 +366,52 @@ const createTrustLine = async (client, setter) => {
     // console.log("Transaction result:", tx.result.meta.TransactionResult);
 };
 
+// Function that showcases how to modify the properties of an account in the XRP Ledger (AccountSet transaction)
+const modifyAccount = async (client, account) => {
+    // // {
+    // //     "TransactionType": "AccountSet",
+    // //     "Account" : "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
+    // //     "Fee": "12",
+    // //     "Sequence": 5,
+    // //     "Domain": "6578616D706C652E636F6D",
+    // //     "SetFlag": 5,
+    // //     "MessageKey": "03AB40A0490F9B7ED8DF29D246BF2D6269820A0EE7742ACDD457BEA7C7D0931EDB"
+    // // }
+
+    // // Prepare transaction
+    // const prepared = await client.autofill({            // <--- autofill() method automatically fills in good defaults for the remaining fields of a transaction
+    //     'TransactionType': 'AccountSet',
+    //     'Account': account.address,
+    //     'Domain': '6578616D706C652E636F6D'
+    // });
+
+    // const max_ledger = prepared.LastLedgerSequence;    // <--- optional LastLedgerSequence is strongly recommended
+
+    // // Expected output of prepared
+    // console.log('Prepared transaction instructions:', prepared);
+
+    // // Expected output of max_ledger
+    // // ###
+    // console.log('Transaction expires after ledger:', max_ledger);
+
+    // // Sign the transaction prepared above to authorize the transaction
+    // const signed = account.sign(prepared);
+
+    // // Outputs the transaction's ID or identifying hash, which can be used to look up the transaction later
+    // // (unique 64 character hexadecimal string)
+    // console.log("Identifying hash:", signed.hash);
+
+    // // Signature represented by the hexadecimal representation of its canonical binary format called a 'blob'
+    // console.log("Signed blob:", signed.tx_blob);
+
+    // // Submit the signed blob to XRP Ledger server
+    // // submitAndWait() submits a signed transaction to the network and waits for the response
+    // // submitSigned() submits a transaction and gets only the preliminary response
+    // const tx = await client.submitAndWait(signed.tx_blob);
+
+    // console.log("Transaction result:", tx.result.meta.TransactionResult);
+};
+
 // Used to demonstrate wallet generation, queries to the XRP Ledger API, handlers for events on the XRP Ledger API, and
 // sending of XRP
 const main = async () => {
@@ -395,6 +441,9 @@ const main = async () => {
 
     // Create a trust line linking two accounts (TrustSet transaction)
     await createTrustLine(client, wallet);
+
+    // Modify the properties of an account in the XRP Ledger
+    await modifyAccount(client, wallet);
 
     // Disconnect from network client when done.
     // client.disconnect();
