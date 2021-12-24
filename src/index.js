@@ -83,6 +83,7 @@ const generateWallet = async (client) => {
 
 // Function that showcases various ways to query the XRP Ledger's WebSocket API (more in https://xrpl.org/request-formatting.html)
 const generateQuery = async (client, wallet) => {
+    // ------------ A) Get details about wallet -----------------------------------------
     // const response = await client.request({
     //     'command': 'account_info',
     //     'account': wallet.address,
@@ -111,8 +112,16 @@ const generateQuery = async (client, wallet) => {
     // //     type: '...'
     // // }
     // console.log(response);
+    // ------------ A) Gets details about wallet ----------------------------------------
 
-    // return response;
+    // ------------ B) Gets offers created by wallet ------------------------------------
+    const response = await client.request({
+        'command': 'account_offers',
+        'account': `${process.env.W1_classicAddress}`
+    });
+
+    console.log(response.result.offers);
+    // ------------ B) Gets offers created by wallet ------------------------------------
 };
 
 // Function that showcases various ways to add handlers for events from the XRP Ledger
@@ -128,7 +137,7 @@ const generateHandler = (client) => {
     // });
 };
 
-// Function that showcases various ways to send XRP from one wallet to another
+// Function that showcases how to send XRP from one wallet to another
 const sendXRP = async (client, sender, receiver) => {
     // // Prepare transaction
     // const prepared = await client.autofill({            // <--- autofill() method automatically fills in good defaults for the remaining fields of a transaction
@@ -155,7 +164,7 @@ const sendXRP = async (client, sender, receiver) => {
 
     // // Expected output of xrpl.dropsToXrp(prepared.Fee)
     // // 0.006054
-    // console.log('Transaction cost:', xrpl.dropsToXrp(prepared.Fee), 'XRP');
+    // console.log('Transaction cost:', Number(xrpl.dropsToXrp(prepared.Fee)), 'XRP');
 
     // // Expected output of max_ledger
     // // 23818084
@@ -180,6 +189,124 @@ const sendXRP = async (client, sender, receiver) => {
     // console.log("Balance changes:", JSON.stringify(xrpl.getBalanceChanges(tx.result.meta), null, 2));
 };
 
+
+
+// Function that showcases how to create an offer (or OfferCreate transaction)
+const createOffer = async (client, creator) => {
+    // // Prepare transaction
+    // const prepared = await client.autofill({            // <--- autofill() method automatically fills in good defaults for the remaining fields of a transaction
+    //     'TransactionType': 'OfferCreate',
+    //     'Account': creator.address,
+    //     'TakerGets': '6000000',
+    //     'TakerPays': {
+    //         'currency': 'ENJ',
+    //         'issuer': 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
+    //         'value': '2'
+    //     }
+    // });
+
+    // const max_ledger = prepared.LastLedgerSequence;    // <--- optional LastLedgerSequence is strongly recommended
+
+    // // Expected output of prepared
+    // // {
+    // //     TransactionType: 'OfferCreate',
+    // //     Account: '...',
+    // //     TakerGets: '6000000',
+    // //     TakerPays: {
+    // //       currency: 'GKO',
+    // //       issuer: 'ruazs5h1qEsqpke88pcqnaseXdm6od2xc',
+    // //       value: '2'
+    // //     },
+    // //     Flags: 0,
+    // //     Sequence: 23768456,
+    // //     Fee: '12',
+    // //     LastLedgerSequence: 23821538
+    // // }
+    // console.log('Prepared transaction instructions:', prepared);
+
+    // // Expected output of xrpl.dropsToXrp(prepared.TakerGets)
+    // // 6
+    // console.log('TakerGets:', Number(xrpl.dropsToXrp(prepared.TakerGets)), 'XRP');
+
+    // // Expected output Number(prepared.TakerPays.value), prepared.TakerPays.currency
+    // // 2 GKO
+    // console.log('TakerPays', Number(prepared.TakerPays.value), prepared.TakerPays.currency);
+
+    // // Expected output of max_ledger
+    // // 23821538
+    // console.log('Transaction expires after ledger:', max_ledger);
+
+    // // Sign the transaction prepared above to authorize the transaction
+    // const signed = creator.sign(prepared);
+
+    // // Outputs the transaction's ID or identifying hash, which can be used to look up the transaction later
+    // // (unique 64 character hexadecimal string)
+    // console.log("Identifying hash:", signed.hash);
+
+    // // Signature represented by the hexadecimal representation of its canonical binary format called a 'blob'
+    // console.log("Signed blob:", signed.tx_blob);
+
+    // // Submit the signed blob to XRP Ledger server
+    // // submitAndWait() submits a signed transaction to the network and waits for the response
+    // // submitSigned() submits a transaction and gets only the preliminary response
+    // const tx = await client.submitAndWait(signed.tx_blob);
+
+    // console.log("Transaction result:", tx.result.meta.TransactionResult);
+};
+
+// Function that showcases how to cancel an offer (or create an OfferCancel transaction)
+const cancelOffer = async (client, canceller) => {
+    // // Prepare transaction
+    // const prepared = await client.autofill({            // <--- autofill() method automatically fills in good defaults for the remaining fields of a transaction
+    //     'TransactionType': 'OfferCancel',
+    //     'Account': canceller.address,
+    //     'OfferSequence': 23768459
+    // });
+
+    // const max_ledger = prepared.LastLedgerSequence;    // <--- optional LastLedgerSequence is strongly recommended
+
+    // // Expected output of prepared
+    // // {
+    // //     TransactionType: 'OfferCancel',
+    // //     Account: '...',
+    // //     OfferSequence: 23768459,
+    // //     Flags: 0,
+    // //     Sequence: 23768461,
+    // //     Fee: '12',
+    // //     LastLedgerSequence: 23822697
+    // // }
+    // console.log('Prepared transaction instructions:', prepared);
+
+    // // // Expected output of xrpl.dropsToXrp(prepared.TakerGets)
+    // // // 6
+    // // console.log('TakerGets:', Number(xrpl.dropsToXrp(prepared.TakerGets)), 'XRP');
+
+    // // // Expected output Number(prepared.TakerPays.value), prepared.TakerPays.currency
+    // // // 2 GKO
+    // // console.log('TakerPays', Number(prepared.TakerPays.value), prepared.TakerPays.currency);
+
+    // // // Expected output of max_ledger
+    // // // 23821538
+    // // console.log('Transaction expires after ledger:', max_ledger);
+
+    // // Sign the transaction prepared above to authorize the transaction
+    // const signed = canceller.sign(prepared);
+
+    // // Outputs the transaction's ID or identifying hash, which can be used to look up the transaction later
+    // // (unique 64 character hexadecimal string)
+    // console.log("Identifying hash:", signed.hash);
+
+    // // Signature represented by the hexadecimal representation of its canonical binary format called a 'blob'
+    // console.log("Signed blob:", signed.tx_blob);
+
+    // // Submit the signed blob to XRP Ledger server
+    // // submitAndWait() submits a signed transaction to the network and waits for the response
+    // // submitSigned() submits a transaction and gets only the preliminary response
+    // const tx = await client.submitAndWait(signed.tx_blob);
+
+    // console.log("Transaction result:", tx.result.meta.TransactionResult);
+};
+
 // Used to demonstrate wallet generation, queries to the XRP Ledger API, handlers for events on the XRP Ledger API, and
 // sending of XRP
 const main = async () => {
@@ -193,13 +320,19 @@ const main = async () => {
     const wallet = await generateWallet(client);
 
     // Query XRP Ledger's WebSocket API
-    const response = await generateQuery(client, wallet);
+    await generateQuery(client, wallet);
 
     // Set up handlers for events
     generateHandler(client);
 
     // Send XRP
     await sendXRP(client, wallet, process.env.W2_classicAddress);
+
+    // Create an offer (OfferCreate transaction)
+    await createOffer(client, wallet);
+
+    // Cancel an offer (OfferCancel transaction)
+    await cancelOffer(client, wallet);
 
     // Disconnect from network client when done.
     // client.disconnect();
