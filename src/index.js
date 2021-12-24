@@ -5,7 +5,6 @@ dotenv.config({ path: '../.env' });
 const xrpl = require('xrpl');
 
 // [ Variables ]
-
 // Public server I am using (more in https://xrpl.org/public-servers.html):
 // - Operator: Ripple
 // - Network: Testnet
@@ -115,13 +114,22 @@ const generateQuery = async (client, wallet) => {
     // ------------ A) Gets details about wallet ----------------------------------------
 
     // ------------ B) Gets offers created by wallet ------------------------------------
-    const response = await client.request({
-        'command': 'account_offers',
-        'account': `${process.env.W1_classicAddress}`
-    });
+    // const response = await client.request({
+    //     'command': 'account_offers',
+    //     'account': `${wallet.address}`
+    // });
 
-    console.log(response.result.offers);
+    // console.log(response.result.offers);
     // ------------ B) Gets offers created by wallet ------------------------------------
+
+    // ------------ C) Gets trust lines set by account ----------------------------------
+    // const response = await client.request({
+    //     'command': 'account_lines',
+    //     'account': `${wallet.address}`
+    // });
+
+    // console.log(response.result);
+    // ------------ C) Gets trust lines set by account ----------------------------------
 };
 
 // Function that showcases various ways to add handlers for events from the XRP Ledger
@@ -188,8 +196,6 @@ const sendXRP = async (client, sender, receiver) => {
     // console.log("Transaction result:", tx.result.meta.TransactionResult);
     // console.log("Balance changes:", JSON.stringify(xrpl.getBalanceChanges(tx.result.meta), null, 2));
 };
-
-
 
 // Function that showcases how to create an offer (or OfferCreate transaction)
 const createOffer = async (client, creator) => {
@@ -277,20 +283,73 @@ const cancelOffer = async (client, canceller) => {
     // // }
     // console.log('Prepared transaction instructions:', prepared);
 
-    // // // Expected output of xrpl.dropsToXrp(prepared.TakerGets)
-    // // // 6
-    // // console.log('TakerGets:', Number(xrpl.dropsToXrp(prepared.TakerGets)), 'XRP');
+    // // Expected output of xrpl.dropsToXrp(prepared.TakerGets)
+    // // 6
+    // console.log('TakerGets:', Number(xrpl.dropsToXrp(prepared.TakerGets)), 'XRP');
 
-    // // // Expected output Number(prepared.TakerPays.value), prepared.TakerPays.currency
-    // // // 2 GKO
-    // // console.log('TakerPays', Number(prepared.TakerPays.value), prepared.TakerPays.currency);
+    // // Expected output Number(prepared.TakerPays.value), prepared.TakerPays.currency
+    // // 2 GKO
+    // console.log('TakerPays', Number(prepared.TakerPays.value), prepared.TakerPays.currency);
 
-    // // // Expected output of max_ledger
-    // // // 23821538
-    // // console.log('Transaction expires after ledger:', max_ledger);
+    // // Expected output of max_ledger
+    // // 23822697
+    // console.log('Transaction expires after ledger:', max_ledger);
 
     // // Sign the transaction prepared above to authorize the transaction
     // const signed = canceller.sign(prepared);
+
+    // // Outputs the transaction's ID or identifying hash, which can be used to look up the transaction later
+    // // (unique 64 character hexadecimal string)
+    // console.log("Identifying hash:", signed.hash);
+
+    // // Signature represented by the hexadecimal representation of its canonical binary format called a 'blob'
+    // console.log("Signed blob:", signed.tx_blob);
+
+    // // Submit the signed blob to XRP Ledger server
+    // // submitAndWait() submits a signed transaction to the network and waits for the response
+    // // submitSigned() submits a transaction and gets only the preliminary response
+    // const tx = await client.submitAndWait(signed.tx_blob);
+
+    // console.log("Transaction result:", tx.result.meta.TransactionResult);
+};
+
+// Function that showcases how to create a trust line linking two accounts
+const createTrustLine = async (client, setter) => {
+    // // Prepare transaction
+    // const prepared = await client.autofill({            // <--- autofill() method automatically fills in good defaults for the remaining fields of a transaction
+    //     'TransactionType': 'TrustSet',
+    //     'Account': setter.address,
+    //     'LimitAmount': {
+    //         'currency': 'USD',
+    //         'issuer': 'r3hwWiPWvXgdGt58MNQzB5iUGqiiawy4gn',
+    //         'value': '100'
+    //     }
+    // });
+
+    // const max_ledger = prepared.LastLedgerSequence;    // <--- optional LastLedgerSequence is strongly recommended
+
+    // // Expected output of prepared
+    // // {
+    // //     TransactionType: 'TrustSet',
+    // //     Account: '...',
+    // //     LimitAmount: {
+    // //       currency: 'USD',
+    // //       issuer: '...',
+    // //       value: '100'
+    // //     },
+    // //     Flags: 0,
+    // //     Sequence: ###,
+    // //     Fee: '12',
+    // //     LastLedgerSequence: ###
+    // // }
+    // console.log('Prepared transaction instructions:', prepared);
+
+    // // Expected output of max_ledger
+    // // ###
+    // console.log('Transaction expires after ledger:', max_ledger);
+
+    // // Sign the transaction prepared above to authorize the transaction
+    // const signed = setter.sign(prepared);
 
     // // Outputs the transaction's ID or identifying hash, which can be used to look up the transaction later
     // // (unique 64 character hexadecimal string)
@@ -333,6 +392,9 @@ const main = async () => {
 
     // Cancel an offer (OfferCancel transaction)
     await cancelOffer(client, wallet);
+
+    // Create a trust line linking two accounts (TrustSet transaction)
+    await createTrustLine(client, wallet);
 
     // Disconnect from network client when done.
     // client.disconnect();
