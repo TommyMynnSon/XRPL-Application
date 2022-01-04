@@ -1,11 +1,10 @@
-// [ Dependencies ]
 const xrpl = require('xrpl');
 
 const dotenv = require('dotenv');
 dotenv.config({ path: '../.env' });
 
 // [ Variables ]
-// Public server I am using (more in https://xrpl.org/public-servers.html):
+// Public server I am using (more listed at https://xrpl.org/public-servers.html):
 // - Operator: Ripple
 // - Network: Testnet
 // - WebSocketURL: wss://s.altnet.rippletest.net/
@@ -147,54 +146,54 @@ const generateHandler = (client) => {
 
 // Function that showcases how to send XRP from one wallet to another
 const sendXRP = async (client, sender, receiver) => {
-    // // Prepare transaction
-    // const prepared = await client.autofill({            // <--- autofill() method automatically fills in good defaults for the remaining fields of a transaction
-    //     'TransactionType': 'Payment',
-    //     'Account': sender.address,
-    //     'Amount': xrpl.xrpToDrops('25'),
-    //     'Destination': `${receiver}`
-    // });
+    // Prepare transaction
+    const prepared = await client.autofill({            // <--- autofill() method automatically fills in good defaults for the remaining fields of a transaction
+        'TransactionType': 'Payment',
+        'Account': sender.address,
+        'Amount': xrpl.xrpToDrops('25'),
+        'Destination': `${receiver}`
+    });
 
-    // const max_ledger = prepared.LastLedgerSequence;    // <--- optional LastLedgerSequence is strongly recommended
+    const max_ledger = prepared.LastLedgerSequence;    // <--- optional LastLedgerSequence is strongly recommended
 
-    // // Expected output of prepared
-    // // {
-    // //     TransactionType: 'Payment',
-    // //     Account: '...',
-    // //     Amount: '100000000',
-    // //     Destination: '...',
-    // //     Flags: 0,
-    // //     Sequence: 23768460,
-    // //     Fee: '6054',
-    // //     LastLedgerSequence: 23818084
-    // // }
-    // console.log('Prepared transaction instructions:', prepared);
+    // Expected output of prepared
+    // {
+    //     TransactionType: 'Payment',
+    //     Account: '...',
+    //     Amount: '100000000',
+    //     Destination: '...',
+    //     Flags: 0,
+    //     Sequence: 23768460,
+    //     Fee: '6054',
+    //     LastLedgerSequence: 23818084
+    // }
+    console.log('Prepared transaction instructions:', prepared);
 
-    // // Expected output of xrpl.dropsToXrp(prepared.Fee)
-    // // 0.006054
-    // console.log('Transaction cost:', Number(xrpl.dropsToXrp(prepared.Fee)), 'XRP');
+    // Expected output of xrpl.dropsToXrp(prepared.Fee)
+    // 0.006054
+    console.log('Transaction cost:', Number(xrpl.dropsToXrp(prepared.Fee)), 'XRP');
 
-    // // Expected output of max_ledger
-    // // 23818084
-    // console.log('Transaction expires after ledger:', max_ledger);
+    // Expected output of max_ledger
+    // 23818084
+    console.log('Transaction expires after ledger:', max_ledger);
 
-    // // Sign the transaction prepared above to authorize the transaction
-    // const signed = sender.sign(prepared);
+    // Sign the transaction prepared above to authorize the transaction
+    const signed = sender.sign(prepared);
 
-    // // Outputs the transaction's ID or identifying hash, which can be used to look up the transaction later
-    // // (unique 64 character hexadecimal string)
-    // console.log("Identifying hash:", signed.hash);
+    // Outputs the transaction's ID or identifying hash, which can be used to look up the transaction later
+    // (unique 64 character hexadecimal string)
+    console.log("Identifying hash:", signed.hash);
 
-    // // Signature represented by the hexadecimal representation of its canonical binary format called a 'blob'
-    // console.log("Signed blob:", signed.tx_blob);
+    // Signature represented by the hexadecimal representation of its canonical binary format called a 'blob'
+    console.log("Signed blob:", signed.tx_blob);
 
-    // // Submit the signed blob to XRP Ledger server
-    // // submitAndWait() submits a signed transaction to the network and waits for the response
-    // // submitSigned() submits a transaction and gets only the preliminary response
-    // const tx = await client.submitAndWait(signed.tx_blob);
+    // Submit the signed blob to XRP Ledger server
+    // submitAndWait() submits a signed transaction to the network and waits for the response
+    // submitSigned() submits a transaction and gets only the preliminary response
+    const tx = await client.submitAndWait(signed.tx_blob);
 
-    // console.log("Transaction result:", tx.result.meta.TransactionResult);
-    // console.log("Balance changes:", JSON.stringify(xrpl.getBalanceChanges(tx.result.meta), null, 2));
+    console.log("Transaction result:", tx.result.meta.TransactionResult);
+    console.log("Balance changes:", JSON.stringify(xrpl.getBalanceChanges(tx.result.meta), null, 2));
 };
 
 // Function that showcases how to create an offer (or OfferCreate transaction)
@@ -423,7 +422,7 @@ const main = async () => {
     generateHandler(client);
 
     // Send XRP
-    await sendXRP(client, wallet, process.env.W2_classicAddress);
+    await sendXRP(client, wallet, 'rNrLLdLUE3xwUiU8dTY8hqfCp3TVrYNUZc');
 
     // Create an offer (OfferCreate transaction)
     await createOffer(client, wallet);
