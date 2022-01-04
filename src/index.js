@@ -36,11 +36,11 @@ const generateWallet = async (client) => {
 
     // C) INSTANTIATE A WALLET FROM A SEED ENCODED IN BASE58
 
-    const test_wallet = xrpl.Wallet.fromSeed(process.env.W1_seed);
+    // const test_wallet = xrpl.Wallet.fromSeed(process.env.W1_seed);
 
-    console.log('test_wallet:', test_wallet);
+    // console.log('test_wallet:', test_wallet);
 
-    return test_wallet;
+    // return test_wallet;
 
     // C) INSTANTIATE A WALLET FROM A SEED ENCODED IN BASE58
 };
